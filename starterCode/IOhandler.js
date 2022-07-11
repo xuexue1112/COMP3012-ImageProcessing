@@ -19,7 +19,16 @@ const unzipper = require("unzipper"),
  * @param {string} pathOut
  * @return {promise}
  */
-const unzip = (pathIn, pathOut) => {};
+const unzip = (pathIn, pathOut) => {
+  fs.createReadStream(pathIn)
+    .pipe(unzipper.Extract({ path: pathOut }))
+    .on("entry", (entry) => entry.autodrain())
+    .promise()
+    .then(
+      () => console.log("Extraction operation complete"),
+      (e) => console.log("error", e)
+    );
+};
 
 /**
  * Description: read all the png files from given directory and return Promise containing array of each png file path
