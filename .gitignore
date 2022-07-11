@@ -1,3 +1,5 @@
 
 starterCode/node_modules/*
 .DS_Store
+starterCode/unzipped/*
+starterCode/grayscaled/*

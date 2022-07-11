@@ -33,7 +33,17 @@ const unzip = (pathIn, pathOut) => {
  * @param {string} path
  * @return {promise}
  */
-const readDir = (dir) => {};
+const readDir = (dir) => {
+  return new Promise(function (resolve, reject) {
+    fs.readdir(dir, (err, filenames) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(filenames);
+      }
+    });
+  });
+};
 
 /**
  * Description: Read in png file by given pathIn,
@@ -43,7 +53,31 @@ const readDir = (dir) => {};
  * @param {string} pathProcessed
  * @return {promise}
  */
-const grayScale = (pathIn, pathOut) => {};
+const grayScale = (pathIn, pathOut) => {
+  fs.createReadStream(pathIn)
+    .pipe(
+      new PNG({
+        filterType: 4,
+      })
+    )
+    .on("parsed", function () {
+      for (var y = 0; y < this.height; y++) {
+        for (var x = 0; x < this.width; x++) {
+          var idx = (this.width * y + x) << 2;
+
+          let greyScale =
+            0.3 * this.data[idx] +
+            0.59 * this.data[idx + 1] +
+            0.11 * this.data[idx + 2];
+          this.data[idx] = greyScale;
+          this.data[idx + 1] = greyScale;
+          this.data[idx + 2] = greyScale;
+        }
+      }
+
+      this.pack().pipe(fs.createWriteStream(pathOut));
+    });
+};
 
 module.exports = {
   unzip,
