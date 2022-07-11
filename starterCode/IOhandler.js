@@ -20,14 +20,11 @@ const unzipper = require("unzipper"),
  * @return {promise}
  */
 const unzip = (pathIn, pathOut) => {
-  fs.createReadStream(pathIn)
+  return fs
+    .createReadStream(pathIn)
     .pipe(unzipper.Extract({ path: pathOut }))
     .on("entry", (entry) => entry.autodrain())
-    .promise()
-    .then(
-      () => console.log("Extraction operation complete"),
-      (e) => console.log("error", e)
-    );
+    .promise();
 };
 
 /**

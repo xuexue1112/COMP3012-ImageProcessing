@@ -12,4 +12,7 @@ const IOhandler = require("./IOhandler"),
   pathUnzipped = `${__dirname}/unzipped`,
   pathProcessed = `${__dirname}/grayscaled`;
 
-IOhandler.unzip(zipFilePath, pathUnzipped);
+IOhandler.unzip(zipFilePath, pathUnzipped).then(
+  () => console.log("Extraction operation complete"),
+  (e) => console.log("error", e)
+);
